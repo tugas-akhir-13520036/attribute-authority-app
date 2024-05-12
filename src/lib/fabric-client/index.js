@@ -21,7 +21,7 @@ class FabricClient {
 
         this.ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
         this.caClient = CertAuthUtil.buildCAClient(FabricCAClient, this.ccp, this.org.caHostName);
-        this.wallet = Wallets.newFileSystemWallet(walletPath);
+        this.wallet = await Wallets.newFileSystemWallet(walletPath);
 
         await CertAuthUtil.enrollAdmin(this.caClient, this.wallet, this.org.mspId);
     }

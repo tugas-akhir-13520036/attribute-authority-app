@@ -2,6 +2,11 @@ const ORGANIZATION = {
     org1: 'merchant',
     org2: 'admin',
     org3: 'payment_provider',
+
+    MERCHANT: 'org1',
+    ADMIN: 'org2',
+    PAYMENT_PROVIDER: 'org3',
+
 };
 
 const CHANNEL = {
