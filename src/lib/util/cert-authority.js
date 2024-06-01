@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-const logger = require('./logger');
+const logger = require('../../util/logger');
 
 const adminUserId = 'admin';
 const adminUserPasswd = 'adminpw';
@@ -31,6 +31,7 @@ exports.buildCAClient = (FabricCAServices, ccp, caHostName) => {
 exports.enrollAdmin = async (caClient, wallet, orgMspId) => {
     try {
         // Check to see if we've already enrolled the admin user.
+
         const identity = await wallet.get(adminUserId);
         if (identity) {
             logger.info('An identity for the admin user already exists in the wallet');

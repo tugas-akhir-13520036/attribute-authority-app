@@ -3,48 +3,49 @@ const FabricCAClient = require('fabric-ca-client');
 const path = require('path');
 const fs = require('fs');
 
-const CertAuthUtil = require('../../util/cert-authority');
+const CertAuthUtil = require('../util/cert-authority');
 
 const {
     WALLET_PATH, CHANNEL, orgConfig,
 } = require('./constant');
+const logger = require('../../util/logger');
 
 class FabricClient {
-    constructor(orgName) {
+    constructor() {
         this.channelName = CHANNEL.DEFAULT;
-        this.org = orgConfig[orgName];
+        this.gateway = new Gateway();
     }
 
     async init() {
-        const ccpPath = path.resolve(__dirname, this.org.ccpPath);
+        const ccpPath = path.resolve(__dirname, orgConfig.ccpPath);
         const walletPath = path.join(process.cwd(), WALLET_PATH);
 
-        this.ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
-        this.caClient = CertAuthUtil.buildCAClient(FabricCAClient, this.ccp, this.org.caHostName);
+        const ccp = JSON.parse(fs.readFileSync(ccpPath, 'utf8'));
+        const caClient = CertAuthUtil.buildCAClient(FabricCAClient, ccp, orgConfig.caHostName);
+
         this.wallet = await Wallets.newFileSystemWallet(walletPath);
 
-        await CertAuthUtil.enrollAdmin(this.caClient, this.wallet, this.org.mspId);
-    }
+        logger.info('Enrolling Admin');
+        await CertAuthUtil.enrollAdmin(caClient, this.wallet, orgConfig.mspId);
 
-    async registerUser(userId) {
+        logger.info('Registering and Enrolling User');
         await CertAuthUtil.registerAndEnrollUser(
-            this.caClient,
+            caClient,
             this.wallet,
-            this.org.mspId,
-            userId,
-            this.org.affiliation,
+            orgConfig.mspId,
+            orgConfig.userId,
+            orgConfig.affiliation,
         );
-    }
 
-    async connectNetwork(userId) {
-        const gateway = new Gateway();
-        await gateway.connect(this.ccp, {
+        logger.info('Connecting to Fabric gateway');
+        await this.gateway.connect(ccp, {
             wallet: this.wallet,
-            identity: userId,
+            identity: orgConfig.userId,
             discovery: { enabled: true, asLocalhost: true },
         });
-        const network = await gateway.getNetwork(this.channelName);
-        return network;
+        this.network = await this.gateway.getNetwork(this.channelName);
+
+        logger.info('Connected to Fabric gateway');
     }
 }
 
