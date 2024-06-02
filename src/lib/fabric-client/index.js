@@ -6,7 +6,7 @@ const fs = require('fs');
 const CertAuthUtil = require('../util/cert-authority');
 
 const {
-    WALLET_PATH, CHANNEL, orgConfig,
+    WALLET_PATH, CHANNEL, CHAINCODES, orgConfig,
 } = require('./constant');
 const logger = require('../../util/logger');
 
@@ -46,6 +46,12 @@ class FabricClient {
         this.network = await this.gateway.getNetwork(this.channelName);
 
         logger.info('Connected to Fabric gateway');
+    }
+
+    async getAttributes() {
+        const contract = this.network.getContract(CHAINCODES.MERCHANT_ATTR);
+        const result = await contract.submitTransaction('getAttributesList');
+        return JSON.parse(result.toString());
     }
 }
 
