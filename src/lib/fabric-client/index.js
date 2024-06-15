@@ -53,6 +53,56 @@ class FabricClient {
         const result = await contract.submitTransaction('getAttributesList');
         return JSON.parse(result.toString());
     }
+
+    // Merchant
+    async fetchMerchantList() {
+        const contract = this.network.getContract(CHAINCODES.MERCHANT_ATTR);
+        const result = await contract.submitTransaction('fetchAllMerchantData');
+        return JSON.parse(result.toString());
+    }
+
+    async fetchMerchant(id) {
+        const contract = this.network.getContract(CHAINCODES.MERCHANT_ATTR);
+        const result = await contract.submitTransaction('fetchMerchantData', id);
+        return JSON.parse(result.toString());
+    }
+
+    async activateMerchantAttribute(marchantId, attributeName) {
+        const date = new Date().toISOString();
+
+        const contract = this.network.getContract(CHAINCODES.MERCHANT_ATTR);
+        await contract.submitTransaction('activateMerchantAttr', marchantId, attributeName, date);
+    }
+
+    async deactivateMerchantAttribute(marchantId, attributeName) {
+        const contract = this.network.getContract(CHAINCODES.MERCHANT_ATTR);
+        await contract.submitTransaction('deactivateAttribute', marchantId, attributeName);
+    }
+
+    async fetchMerchantHistory(id) {
+        const contract = this.network.getContract(CHAINCODES.MERCHANT_ATTR);
+        const result = await contract.evaluateTransaction('fetchMerchantHistory', id);
+        return JSON.parse(result.toString());
+    }
+
+    // Payment Channel
+    async fetchPaymentChannelList() {
+        const contract = this.network.getContract(CHAINCODES.CHANNEL_POLICY);
+        const result = await contract.evaluateTransaction('fetchAllPaymentChannelData');
+        return JSON.parse(result.toString());
+    }
+
+    async fetchPaymentChannel(id) {
+        const contract = this.network.getContract(CHAINCODES.CHANNEL_POLICY);
+        const result = await contract.evaluateTransaction('fetchPaymentChannel', id);
+        return JSON.parse(result.toString());
+    }
+
+    async fetchPaymentChannelHistory(id) {
+        const contract = this.network.getContract(CHAINCODES.CHANNEL_POLICY);
+        const result = await contract.evaluateTransaction('fetchPaymentChannelHistory', id);
+        return JSON.parse(result.toString());
+    }
 }
 
 module.exports = FabricClient;
