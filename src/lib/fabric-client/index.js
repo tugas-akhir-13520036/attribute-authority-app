@@ -75,13 +75,15 @@ class FabricClient {
     }
 
     async deactivateMerchantAttribute(marchantId, attributeName) {
+        const date = new Date().toISOString();
+
         const contract = this.network.getContract(CHAINCODES.MERCHANT_ATTR);
-        await contract.submitTransaction('deactivateAttribute', marchantId, attributeName);
+        await contract.submitTransaction('deactivateMerchantAttr', marchantId, attributeName, date);
     }
 
     async fetchMerchantHistory(id) {
         const contract = this.network.getContract(CHAINCODES.MERCHANT_ATTR);
-        const result = await contract.evaluateTransaction('fetchMerchantHistory', id);
+        const result = await contract.evaluateTransaction('queryHistory', id);
         return JSON.parse(result.toString());
     }
 
@@ -94,13 +96,13 @@ class FabricClient {
 
     async fetchPaymentChannel(id) {
         const contract = this.network.getContract(CHAINCODES.CHANNEL_POLICY);
-        const result = await contract.evaluateTransaction('fetchPaymentChannel', id);
+        const result = await contract.evaluateTransaction('fetchChannelData', id);
         return JSON.parse(result.toString());
     }
 
     async fetchPaymentChannelHistory(id) {
         const contract = this.network.getContract(CHAINCODES.CHANNEL_POLICY);
-        const result = await contract.evaluateTransaction('fetchPaymentChannelHistory', id);
+        const result = await contract.evaluateTransaction('queryHistory', id);
         return JSON.parse(result.toString());
     }
 }
