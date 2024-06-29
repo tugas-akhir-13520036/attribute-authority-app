@@ -58,6 +58,12 @@ class AdminService {
         const res = await this.fabricClient.fetchPaymentChannelHistory(id);
         return res;
     }
+
+    async fetchActivationRecord() {
+        logger.info('Fetching activation record');
+        const res = await this.fabricClient.fetchActivationRecord();
+        return res;
+    }
 }
 
 module.exports = AdminService;

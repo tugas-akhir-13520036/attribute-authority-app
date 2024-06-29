@@ -2,7 +2,7 @@ require('dotenv').config();
 const { v4: uuidv4 } = require('uuid');
 
 const PORT = process.env.PORT || 3000;
-const CLIENT_ID = `admin_${uuidv4()}`;
+const CLIENT_ID = `attribute_authority_${uuidv4()}`;
 
 const IS_TEST_CHAINCODE = true;
 

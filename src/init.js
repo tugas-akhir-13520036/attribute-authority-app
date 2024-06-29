@@ -22,11 +22,11 @@ class Init {
         this.app.get(
             '/healthcheck',
             (_, res) => {
-                res.status(200).send('Admin Dapps is healthy! ');
+                res.status(200).send('Attribute Authority Dapps is healthy! ');
             },
         );
 
-        this.app.use('/admin', this.AdminController.getRouter());
+        this.app.use('/authority', this.AdminController.getRouter());
     }
 }
 

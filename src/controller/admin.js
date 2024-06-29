@@ -11,6 +11,8 @@ class AdminController {
     initRouter() {
         this.router.get('/attributes', handleAsync(this.getAttributeList.bind(this)));
 
+        this.router.get('/activation-record', handleAsync(this.fetchActivationRecord.bind(this)));
+
         // Merchant
         this.router.get('/merchant', handleAsync(this.fetchMerchantList.bind(this)));
         this.router.get('/merchant/:id', handleAsync(this.fetchMerchant.bind(this)));
@@ -79,6 +81,11 @@ class AdminController {
         const { id } = req.params;
         const paymentChannelHistory = await this.adminService.fetchPaymentChannelHistory(id);
         return res.status(200).json(paymentChannelHistory);
+    }
+
+    async fetchActivationRecord(req, res) {
+        const activationRecord = await this.adminService.fetchActivationRecord();
+        return res.status(200).json(activationRecord);
     }
 }
 

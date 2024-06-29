@@ -105,6 +105,12 @@ class FabricClient {
         const result = await contract.evaluateTransaction('queryHistory', id);
         return JSON.parse(result.toString());
     }
+
+    async fetchActivationRecord() {
+        const contract = this.network.getContract(CHAINCODES.MERCHANT_ATTR);
+        const result = await contract.evaluateTransaction('fetchActivationRecord');
+        return JSON.parse(result.toString());
+    }
 }
 
 module.exports = FabricClient;
