@@ -64,6 +64,12 @@ class AdminService {
         const res = await this.fabricClient.fetchActivationRecord();
         return res;
     }
+
+    async getAuthorityEligibleAttributes() {
+        logger.info('Fetching authority eligible attributes');
+        const res = await this.fabricClient.getAuthorityEligibleAttributes();
+        return res;
+    }
 }
 
 module.exports = AdminService;

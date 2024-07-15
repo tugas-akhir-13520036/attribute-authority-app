@@ -44,8 +44,21 @@ class FabricClient {
             discovery: { enabled: true, asLocalhost: true },
         });
         this.network = await this.gateway.getNetwork(this.channelName);
+        await this.mockGenerateAttributeAuthority();
 
         logger.info('Connected to Fabric gateway');
+    }
+
+    async mockGenerateAttributeAuthority() {
+        const contract = this.network.getContract(CHAINCODES.MERCHANT_ATTR);
+        const eligibleAttributes = ['name', 'email', 'total_payment_volume', 'total_revenue', 'total_payment_count', 'is_corporate', 'is_website_valid'];
+        await contract.submitTransaction('mockGenerateAttributeAuthority', eligibleAttributes);
+    }
+
+    async getAuthorityEligibleAttributes() {
+        const contract = this.network.getContract(CHAINCODES.MERCHANT_ATTR);
+        const result = await contract.evaluateTransaction('getAuthorityEligibleAttributes');
+        return JSON.parse(result.toString());
     }
 
     async getAttributes() {
